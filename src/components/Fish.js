@@ -1,6 +1,7 @@
 import { formatPrice } from '../helpers';
 
-const Fish = ({ details }) => {
+const Fish = ({ details, fishKey, addToOrder }) => {
+  const isAvailable = details.status === 'available';
   return (
     <li className="menu-fish">
       <img src={details.image} alt={details.name} />
@@ -9,7 +10,9 @@ const Fish = ({ details }) => {
         <span className="price">{formatPrice(details.price)}</span>
       </h3>
       <p>{details.desc}</p>
-      <button>Add to Cart</button>
+      <button disabled={!isAvailable} onClick={() => addToOrder(fishKey)}>
+        {isAvailable ? 'ADD TO CART' : 'SOLD OUT!'}
+      </button>
     </li>
   );
 };

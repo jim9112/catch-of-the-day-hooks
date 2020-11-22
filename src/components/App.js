@@ -19,13 +19,26 @@ const App = () => {
   const loadSampleFishes = () => {
     setFish({ ...fishes, ...sampleFishes });
   };
+
+  // add order from menu to state
+  const addToOrder = (key) => {
+    const newOrder = order;
+    newOrder[key] = newOrder[key] + 1 || 1;
+    setOrder({ ...newOrder });
+  };
+
   return (
     <div className="catch-of-the-day">
       <div className="menu">
         <Header tagline="Fresh Seafood Market" />
         <ul className="fishes">
           {Object.keys(fishes).map((key) => (
-            <Fish key={key} details={fishes[key]} />
+            <Fish
+              key={key}
+              details={fishes[key]}
+              addToOrder={addToOrder}
+              fishKey={key}
+            />
           ))}
         </ul>
       </div>
