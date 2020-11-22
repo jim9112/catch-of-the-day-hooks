@@ -3,9 +3,9 @@ import Header from './Header';
 import Inventory from './Inventory';
 import Order from './Order';
 import sampleFishes from '../sample-fishes';
+import Fish from './Fish';
 
 const App = () => {
-  console.log(sampleFishes);
   const [fishes, setFish] = useState({});
   const [order, setOrder] = useState({});
 
@@ -14,6 +14,8 @@ const App = () => {
     const fishName = `fish${Date.now()}`;
     setFish({ ...fishes, [fishName]: { ...newFish } });
   };
+
+  // loads sample data into state from sample file
   const loadSampleFishes = () => {
     setFish({ ...fishes, ...sampleFishes });
   };
@@ -21,6 +23,11 @@ const App = () => {
     <div className="catch-of-the-day">
       <div className="menu">
         <Header tagline="Fresh Seafood Market" />
+        <ul className="fishes">
+          {Object.keys(fishes).map((key) => (
+            <Fish key={key} details={fishes[key]} />
+          ))}
+        </ul>
       </div>
       <Order />
       <Inventory
