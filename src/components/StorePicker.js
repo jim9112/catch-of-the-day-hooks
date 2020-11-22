@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getFunName } from '../helpers';
 
-const StorePicker = () => {
+const StorePicker = (props) => {
   var [myInput, setMyInput] = useState();
   useEffect(() => {
     setMyInput(getFunName());
@@ -9,7 +9,8 @@ const StorePicker = () => {
 
   const gotToStore = (e) => {
     e.preventDefault();
-    console.log('go to store');
+    console.log(myInput);
+    props.history.push(`/store/${myInput}`);
   };
 
   return (
