@@ -1,23 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import Inventory from './Inventory';
 import Order from './Order';
 import sampleFishes from '../sample-fishes';
 import Fish from './Fish';
+import base from '../base';
 
-const App = () => {
+function App({ match }) {
   const [fishes, setFish] = useState({});
   const [order, setOrder] = useState({});
-
+  useEffect(() => {
+    const ref = base.syncState(`${match.params.storeId}/fishes`, {
+      context: {
+        setState: ({ fishes }) => setFish({ ...fishes }),
+        state: { fishes },
+      },
+      state: 'fishes',
+    });
+    return () => {
+      base.removeBinding(ref);
+    };
+  }, []);
   // add fish from inventory form to fish state
   const addNewFishes = ({ newFish }) => {
     const fishName = `fish${Date.now()}`;
-    setFish({ ...fishes, [fishName]: { ...newFish } });
+    const updatedFishes = { ...fishes, [fishName]: { ...newFish } };
+    setFish(updatedFishes);
+    base.post(`${match.params.storeId}/fishes`, {
+      data: updatedFishes,
+    });
   };
 
   // loads sample data into state from sample file
   const loadSampleFishes = () => {
-    setFish({ ...fishes, ...sampleFishes });
+    const updatedFishes = { ...fishes, ...sampleFishes };
+    setFish(updatedFishes);
+    base.post(`${match.params.storeId}/fishes`, {
+      data: updatedFishes,
+    });
   };
 
   // add order from menu to state
@@ -42,7 +62,7 @@ const App = () => {
           ))}
         </ul>
       </div>
-      <Order />
+      <Order fishes={fishes} order={order} />
       <Inventory
         addNewFishes={addNewFishes}
         fishes={fishes}
@@ -50,5 +70,5 @@ const App = () => {
       />
     </div>
   );
-};
+}
 export default App;
