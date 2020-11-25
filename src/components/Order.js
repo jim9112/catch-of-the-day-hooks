@@ -6,7 +6,7 @@ const Order = ({ fishes, order }) => {
   const total = orderIds.reduce((acc, key) => {
     const fish = fishes[key];
     const count = order[key];
-    const isAvailable = fish.status === 'available';
+    const isAvailable = fish && fish.status === 'available';
     if (isAvailable) {
       return acc + count * fish.price;
     }
@@ -17,9 +17,12 @@ const Order = ({ fishes, order }) => {
     const fish = fishes[key];
     const count = order[key];
     const isAvailable = fish && fish.status === 'available';
+    if (!fish) {
+      return null;
+    }
     if (!isAvailable) {
       return (
-        <li key={Date.now()}>
+        <li key={key}>
           Sorry {fish ? fish.name : 'fish'} is no longer available
         </li>
       );

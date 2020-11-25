@@ -9,6 +9,8 @@ import base from '../base';
 function App({ match }) {
   const [fishes, setFish] = useState({});
   const [order, setOrder] = useState({});
+
+  // sync state with firebase on load
   useEffect(() => {
     const ref = base.syncState(`${match.params.storeId}/fishes`, {
       context: {
@@ -21,6 +23,19 @@ function App({ match }) {
       base.removeBinding(ref);
     };
   }, []);
+
+  // update order from local storage on mount
+  useEffect(() => {
+    const localStorageRef = localStorage.getItem(match.params.storeId);
+    const updatedOrder = JSON.parse(localStorageRef);
+    setOrder(updatedOrder || {});
+  }, []);
+
+  // update local storage with order on change
+  useEffect(() => {
+    localStorage.setItem(match.params.storeId, JSON.stringify(order));
+  }, [order]);
+
   // add fish from inventory form to fish state
   const addNewFishes = ({ newFish }) => {
     const fishName = `fish${Date.now()}`;
@@ -30,7 +45,15 @@ function App({ match }) {
       data: updatedFishes,
     });
   };
-
+  // update fish inventory
+  const updateFishes = (key, fish) => {
+    const updatedFishes = { ...fishes };
+    updatedFishes[key] = fish;
+    setFish(updatedFishes);
+    base.post(`${match.params.storeId}/fishes`, {
+      data: updatedFishes,
+    });
+  };
   // loads sample data into state from sample file
   const loadSampleFishes = () => {
     const updatedFishes = { ...fishes, ...sampleFishes };
@@ -67,6 +90,7 @@ function App({ match }) {
         addNewFishes={addNewFishes}
         fishes={fishes}
         loadSampleFishes={loadSampleFishes}
+        updateFishes={updateFishes}
       />
     </div>
   );
