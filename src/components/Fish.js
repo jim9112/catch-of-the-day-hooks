@@ -1,4 +1,5 @@
 import { formatPrice } from '../helpers';
+import PropTypes from 'prop-types';
 
 const Fish = ({ details, fishKey, addToOrder }) => {
   const isAvailable = details.status === 'available';
@@ -15,6 +16,17 @@ const Fish = ({ details, fishKey, addToOrder }) => {
       </button>
     </li>
   );
+};
+
+Fish.prototypes = {
+  details: PropTypes.shape({
+    image: PropTypes.string,
+    name: PropTypes.string,
+    dec: PropTypes.string,
+    status: PropTypes.string,
+    price: PropTypes.number,
+  }),
+  addToOrder: PropTypes.func,
 };
 
 export default Fish;

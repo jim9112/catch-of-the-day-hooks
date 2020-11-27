@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatPrice } from '../helpers';
 
-const Order = ({ fishes, order }) => {
+const Order = ({ fishes, order, deleteOrder }) => {
   const orderIds = Object.keys(order);
   const total = orderIds.reduce((acc, key) => {
     const fish = fishes[key];
@@ -31,6 +31,7 @@ const Order = ({ fishes, order }) => {
       <li key={key}>
         {count} lbs {fish.name}
         {formatPrice(count * fish.price)}
+        <button onClick={() => deleteOrder(key)}>X</button>
       </li>
     );
   };

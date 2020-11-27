@@ -54,6 +54,18 @@ function App({ match }) {
       data: updatedFishes,
     });
   };
+
+  // delete fish from inventory
+  const deleteFish = (key) => {
+    const fishList = { ...fishes };
+    fishList[key] = null;
+    console.log(fishList);
+    setFish({ fishList });
+    base.post(`${match.params.storeId}/fishes`, {
+      data: fishList,
+    });
+  };
+
   // loads sample data into state from sample file
   const loadSampleFishes = () => {
     const updatedFishes = { ...fishes, ...sampleFishes };
@@ -68,6 +80,13 @@ function App({ match }) {
     const newOrder = order;
     newOrder[key] = newOrder[key] + 1 || 1;
     setOrder({ ...newOrder });
+  };
+
+  // delete from order
+  const deleteOrder = (key) => {
+    const currentOrder = { ...order };
+    delete currentOrder[key];
+    setOrder({ ...currentOrder });
   };
 
   return (
@@ -85,12 +104,14 @@ function App({ match }) {
           ))}
         </ul>
       </div>
-      <Order fishes={fishes} order={order} />
+      <Order fishes={fishes} order={order} deleteOrder={deleteOrder} />
       <Inventory
         addNewFishes={addNewFishes}
         fishes={fishes}
         loadSampleFishes={loadSampleFishes}
         updateFishes={updateFishes}
+        deleteFish={deleteFish}
+        storeId={match.params.storeId}
       />
     </div>
   );

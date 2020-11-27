@@ -1,4 +1,4 @@
-const EditFishForm = ({ fish, fishKey, updateFishes }) => {
+const EditFishForm = ({ fish, fishKey, updateFishes, deleteFish }) => {
   const handleChange = (e) => {
     const updatedFish = {
       ...fish,
@@ -37,6 +37,7 @@ const EditFishForm = ({ fish, fishKey, updateFishes }) => {
         onChange={handleChange}
         value={fish.image}
       />
+      <button onClick={() => deleteFish(fishKey)}>Remove Fish</button>
     </div>
   );
 };
